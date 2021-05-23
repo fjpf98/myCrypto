@@ -1,13 +1,10 @@
 import PySimpleGUI as sg
 import datetime
 from Classes.Wallet import Wallet
+from Classes.Coin import Coin
 
-class layout:
-
-    wallet = Wallet("Francisco")
-    wallet.setValorTotal(0)
-    coin = ""
-
+class Layout:
+    saldo = 0
     layout_Adicionar_Coin = [
         [
             [
@@ -29,48 +26,59 @@ class layout:
     layout_Principal = [
         [
             sg.Text(datetime.datetime.now()),
-            sg.Text("Saldo -> " + str(wallet.getValorTotal())),
+            sg.Text("Saldo -> " + str(saldo)),
             sg.Text(),
-            sg.Button("Voltar_Adicionar"),
+            sg.Button("Adicionar"),
             sg.Button("Terminar")
         ]
     ]
 
+
     def __init__(self):
-        # Create the window
-        self.janela_Saldo()
+        self.wallet = Wallet("Francisco")
+        self.wallet.setValorTotal(0)
+        saldo = str(self.wallet.getValorTotal())
+        coin = ""
+
+        while(1):
+                # Create the window
+                self.janela_Saldo()
+
 
     def janela_Saldo(self):
-        self.window = sg.Window("MyCrypto", self.layout_Adicionar_Coin)
+        self.window = sg.Window("MyCrypto", self.layout_Principal)
         event, values = self.window.read()
-        self.quantidade = float(values['-quant-'])
-        if event == "Voltar_Adicionar":
+        if event == "Adicionar":
             self.window.close()
-            window = sg.Window("MyCrypto", self.layout_Adicionar_Coin)
-            event, values = window.read()
+            self.janela_Definir_Quantidade()
 
 
     def janela_Escolher_Coin(self):
-        self.window.close()
-        window_add = sg.Window("MyCripto", self.layout_Escolher_Coin)
-        event, values = window_add.read()
+        self.window = sg.Window("MyCriptoCoins", self.layout_Escolher_Coin)
+        event, values = self.window.read()
         if event == "Shiba Inu":
-            coin = "SHIB"
-            self.addCoin(coin, self.quantidade)
-            valorTotal = self.wallet.getValorTotal()
-            window_add.close()
-            window_main = sg.Window("MyCripto", self.layout_Principal)
-            event, values = window_main.read()
+            self.coin = Coin("SHIB")
+            self.wallet.addCoin(self.coin.nome, self.quantidade)
+            self.quantidade = 0
+            self.valorTotal = self.wallet.getValorTotal()
+            self.window.close()
+            self.janela_Saldo()
 
         elif event == "veChain":
             coin = "VET"
             self.wallet.addCoin(coin, self.quantidade)
-            valorTotal = self.wallet.getValorTotal()
-            #window.close()
-            window = sg.Window("MyCripto", self.layout_Principal)
-            event, values = window_main.read()
+            self.valorTotal = self.wallet.getValorTotal()
+            self.window.close()
+            self.janela_Saldo()
 
-    def janela_Defenir_Quantidade(self):
-        window = sg.Window("MyCrypto", self.layout_Adicionar_Coin)
-        event, values = window.read()
-        quantidade = float(values['-quant-'])
+    def janela_Definir_Quantidade(self):
+        self.window = sg.Window("MyCrypto_addCoins", self.layout_Adicionar_Coin)
+        event, values = self.window.read()
+        self.quantidade = float(values['-quant-'])
+        print(self.quantidade)
+        if event == "Adicionar":
+            self.window.close()
+            self.janela_Escolher_Coin()
+
+    def getSaldo(self):
+        return self.saldo

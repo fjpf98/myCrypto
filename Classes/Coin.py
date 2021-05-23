@@ -11,7 +11,6 @@ class Coin:
         self.quantidade = 0
         self.price = self.getPrice()
 
-
     def getCoinName(self):
         return self.nome
 

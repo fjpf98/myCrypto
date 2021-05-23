@@ -19,6 +19,7 @@ class Wallet:
     def addCoin(self, c, quant):
         coin = Coin(c)
         coin.setOwnCoins(quant)
+        #coin.setOwnCoins(quant)
         if c in self.wallet_Coins:
             self.wallet_Coins[coin.getCoinName()] = self.wallet_Coins[coin.getCoinName()] + quant
             print("Adicionou à sua wallet com sucesso!")

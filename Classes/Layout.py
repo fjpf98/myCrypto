@@ -40,17 +40,24 @@ class Layout:
         saldo = str(self.wallet.getValorTotal())
         coin = ""
 
-        while(1):
+        while(True):
                 # Create the window
                 self.janela_Saldo()
+
 
 
     def janela_Saldo(self):
         self.window = sg.Window("MyCrypto", self.layout_Principal)
         event, values = self.window.read()
-        if event == "Adicionar":
-            self.window.close()
-            self.janela_Definir_Quantidade()
+        while(True):
+            if event == "Adicionar":
+                self.window.close()
+                self.janela_Definir_Quantidade()
+
+            if (event == sg.WIN_CLOSED):
+                self.window.close()
+
+            
 
 
     def janela_Escolher_Coin(self):
@@ -63,13 +70,14 @@ class Layout:
             self.valorTotal = self.wallet.getValorTotal()
             self.window.close()
             self.janela_Saldo()
-
         elif event == "veChain":
             coin = "VET"
             self.wallet.addCoin(coin, self.quantidade)
             self.valorTotal = self.wallet.getValorTotal()
             self.window.close()
             self.janela_Saldo()
+        if (event == sg.WIN_CLOSED):
+            self.window.close()
 
     def janela_Definir_Quantidade(self):
         self.window = sg.Window("MyCrypto_addCoins", self.layout_Adicionar_Coin)
@@ -79,6 +87,8 @@ class Layout:
         if event == "Adicionar":
             self.window.close()
             self.janela_Escolher_Coin()
+        if (event == sg.WIN_CLOSED):
+            self.window.close()
 
     def getSaldo(self):
         return self.saldo
